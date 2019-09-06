@@ -1,5 +1,6 @@
 // Bottles per water in a shower session
 // According to exercise error-checking is omitted
+// Dani van Enk, 11823526
 
 //including standard I/O header and cs50 headers
 #include <stdio.h>
