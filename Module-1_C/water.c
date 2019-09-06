@@ -1,18 +1,15 @@
 // Bottles per water in a shower session
 // According to exercise error-checking is omitted
 
-//including standard I/O header
+//including standard I/O header and cs50 headers
 #include <stdio.h>
+#include <cs50.h>
 
 //main loop
 int main(void)
 {
-    //minutes variable
-    int minutes;
-
     //user input
-    printf("How many minutes do you shower? (in whole minutes) ");
-    scanf("%d", &minutes);
+    int minutes = get_int("How many minutes do you shower? (in whole minutes) ");
 
     //conversion to bottles
     int bottles = 1.5 * 128 / 16 * minutes;
