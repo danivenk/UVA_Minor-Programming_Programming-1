@@ -16,4 +16,7 @@ int main(void)
 
     //output
     printf("This costs you %d bottles of water!\n", bottles);
+
+    //exit main loop
+    return 0;
 }
