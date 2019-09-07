@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-// get_number_int prompts user with userdefined string (maxlen is 24)
+// get_number_int prompts user with userdefined string (maxlen is 128)
 // it only accepts integer values and converts them to a usable int variable
 // dependencies: power() see below
 // change get_number_int to get_number_long or get_number_longlong by changing
 //  datatype of output and of the function
-int get_number_int(char str[124])
+int get_number_int(char str[128])
 {
     // output intializer
     int output = 0;
@@ -14,23 +14,26 @@ int get_number_int(char str[124])
     while (1)
     {
         // predefine input, numbers and intialize powers
-        char input[24];
+        char input[128];
         char numbers[10] = "0123456789";
         int power_10 = 0;
         int found = 0;
 
         // create a clean 0 filled input array
-        for (int k = 0; k < 24; k++)
+        for (int k = 0; k < 128; k++)
         {
             input[k] = 0;
         }
+
+        // reset to 0 each loop
+        output = 0;
 
         // promt user for input
         printf("%s", str);
         scanf("%s", &input[0]);
 
         // loop for each position
-        for (int i = 23; i >= 0; i--)
+        for (int i = 127; i >= 0; i--)
         {
             // convert the string to numbers
             for (int j = 0; j < 10; j++)
@@ -41,7 +44,7 @@ int get_number_int(char str[124])
                     output += j*power(10, power_10);
                     power_10++;
                     found++;
-                    goto next;
+                    break;
                 }
             }
 
@@ -49,14 +52,10 @@ int get_number_int(char str[124])
             if (input[i] == 0)
             {
                 continue;
-            } else
+            } else if (found == 0)
             {
-                found = 0;
                 break;
             }
-
-            // go here if found a number
-            next:;
         }
 
         // if numbers have been found break out of the ask sequence
@@ -71,7 +70,7 @@ int get_number_int(char str[124])
 }
 
 // power does x^y, where x and y are integers where y >= 0
-int power(int x, int y)
+long long power(int x, int y)
 {
     // begin with 1 x
     int result = x;

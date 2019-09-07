@@ -16,21 +16,26 @@ int get_number(char str[124])
 
     while (1)
     {
-        char input[24];
+        char input[128];
         char numbers[10] = "0123456789";
         int power_10 = 0;
         int found = 0;
 
-        for (int k = 0; k < 24; k++)
+        for (int k = 0; k < 128; k++)
         {
             input[k] = 0;
         }
 
-        printf("%s", str);
-        scanf("%24s", &input[0]);
+        output = 0;
 
-        for (int i = 23; i >= 0; i--)
+        printf("%s", str);
+        scanf("%128s", &input[0]);
+
+
+        for (int i = 127; i >= 0; i--)
         {
+            found = 0;
+
             for (int j = 0; j < 10; j++)
             {
                 if (input[i] == numbers[j])
@@ -38,20 +43,17 @@ int get_number(char str[124])
                     output += j*power(10, power_10);
                     power_10++;
                     found++;
-                    goto next;
+                    break;
                 }
             }
 
             if (input[i] == 0)
             {
                 continue;
-            } else
+            } else if (found == 0)
             {
-                found = 0;
                 break;
             }
-
-            next:;
         }
 
         if (found != 0)
