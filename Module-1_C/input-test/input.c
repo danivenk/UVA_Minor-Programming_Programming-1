@@ -21,8 +21,13 @@ int get_number(char str[124])
         int power_10 = 0;
         int found = 0;
 
+        for (int k = 0; k < 24; k++)
+        {
+            input[k] = 0;
+        }
+
         printf("%s", str);
-        scanf("%s", &input[0]);
+        scanf("%24s", &input[0]);
 
         for (int i = 23; i >= 0; i--)
         {
@@ -33,11 +38,20 @@ int get_number(char str[124])
                     output += j*power(10, power_10);
                     power_10++;
                     found++;
-                } else if (input[i] == '\0' || input[i] == '@' || input[i] == '*')
-                {
-                    break;
+                    goto next;
                 }
             }
+
+            if (input[i] == 0)
+            {
+                continue;
+            } else
+            {
+                found = 0;
+                break;
+            }
+
+            next:;
         }
 
         if (found != 0)
