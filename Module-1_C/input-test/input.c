@@ -26,7 +26,6 @@ int get_number(char str[124])
 
         for (int i = 23; i >= 0; i--)
         {
-
             for (int j = 0; j < 10; j++)
             {
                 if (input[i] == numbers[j])
@@ -34,6 +33,9 @@ int get_number(char str[124])
                     output += j*power(10, power_10);
                     power_10++;
                     found++;
+                } else if (input[i] == '\0' || input[i] == '@' || input[i] == '*')
+                {
+                    break;
                 }
             }
         }
