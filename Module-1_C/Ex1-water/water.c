@@ -6,13 +6,14 @@
 
 // include selfmade functions
 int get_number_int(char str[128]);
-int power(int x, int y);
+long long power(int x, int y);
 
 // main loop
 int main(void)
 {
     // user input
-    int minutes = get_number_int("How many minutes do you shower? (in whole minutes) ");
+    int minutes =
+        get_number_int("How many minutes do you shower? (in whole minutes) ");
 
     // conversion to bottles
     int bottles = 1.5 * 128 / 16 * minutes;
@@ -65,10 +66,10 @@ int get_number_int(char str[128])
                 if (input[i] == numbers[j])
                 {
                     // not forgetting to use the correct powers of 10
-                    output += j*power(10, power_10);
+                    output += j * power(10, power_10);
                     power_10++;
                     found++;
-                    goto next;
+                    break;
                 }
             }
 
@@ -76,14 +77,11 @@ int get_number_int(char str[128])
             if (input[i] == 0)
             {
                 continue;
-            } else
+            }
+            else if (found == 0)
             {
-                found = 0;
                 break;
             }
-
-            // go here if found a number
-            next:;
         }
 
         // if numbers have been found break out of the ask sequence
@@ -98,7 +96,7 @@ int get_number_int(char str[128])
 }
 
 // power does x^y, where x and y are integers where y >= 0
-int power(int x, int y)
+long long power(int x, int y)
 {
     // begin with 1 x
     int result = x;
@@ -107,10 +105,12 @@ int power(int x, int y)
     if (y == 0)
     {
         result = 1;
-    } else if (y == 1)
+    }
+    else if (y == 1)
     {
         return result;
-    } else
+    }
+    else
     {
         // times x till y is gone
         while (y > 1)
