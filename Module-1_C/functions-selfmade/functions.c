@@ -41,7 +41,7 @@ int get_number_int(char str[128])
                 if (input[i] == numbers[j])
                 {
                     // not forgetting to use the correct powers of 10
-                    output += j*power(10, power_10);
+                    output += j * power(10, power_10);
                     power_10++;
                     found++;
                     break;
@@ -52,7 +52,8 @@ int get_number_int(char str[128])
             if (input[i] == 0)
             {
                 continue;
-            } else if (found == 0)
+            }
+            else if (found == 0)
             {
                 break;
             }
@@ -73,16 +74,18 @@ int get_number_int(char str[128])
 long long power(int x, int y)
 {
     // begin with 1 x
-    int result = x;
+    long long result = x;
 
     // special cases for y = 0 and y = 1
     if (y == 0)
     {
         result = 1;
-    } else if (y == 1)
+    }
+    else if (y == 1)
     {
         return result;
-    } else
+    }
+    else
     {
         // times x till y is gone
         while (y > 1)

@@ -99,7 +99,7 @@ int get_number_int(char str[128])
 long long power(int x, int y)
 {
     // begin with 1 x
-    int result = x;
+    long long result = x;
 
     // special cases for y = 0 and y = 1
     if (y == 0)

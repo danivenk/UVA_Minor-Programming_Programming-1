@@ -1,76 +1,118 @@
-//Dani van Enk, 11823526
+// credit.c Validates a credit card number and says if it is
+//  an American Express, a MasterCard or a VISA credit card
+// Dani van Enk, 11823526
 
 //including standard I/O header
 #include <stdio.h>
 
-char valid(long num);
+// predefining the used funcitons
+int valid(long num);
 long get_number_long(char str[128]);
 long long power(int x, int y);
 
+// main loop
 int main(void)
 {
+    // get user credit card number and validate it
     long cred_num = get_number_long("Please type your credit-card number here: ");
     int validation = valid(cred_num);
-    // char output
 
-    // if (validation == 1)
-    // {
-    //     output = "VALID\n";
-    // } else
-    // {
-    //     output = "INVALID\n";
-    // }
+    // find out which company the card is
+    //  if not known say "INVALID" or if the card is not valid
+    if (validation == 1)
+    {
+        if ((cred_num - 34 * power(10, 13) > 0 && cred_num - 35 * power(10, 13) < 0) ||
+            (cred_num - 37 * power(10, 13) > 0 && cred_num - 38 * power(10, 13) < 0))
+        {
+            printf("AMEX\n");
+        }
+        else if (cred_num - 51 * power(10, 14) > 0 &&
+                 cred_num - 56 * power(10, 14) < 0)
+        {
+            printf("MASTERCARD\n");
+        }
+        else if (cred_num - 4 * power(10, 15) > 0 &&
+                 cred_num - 5 * power(10, 15) < 0)
+        {
+            printf("VISA\n");
+        }
+        else
+        {
+            printf("INVALID\n");
+        }
+    }
+    else
+    {
+        printf("INVALID\n");
+    }
 
-    printf("%d\n", validation);
-
+    // end program
     return 0;
 }
 
-char valid(long num)
+// valid() validates the card number
+int valid(long num)
 {
-    long num1 = num/10;
+    // initialize variables
+    long num1 = num / 10;
     long num2 = num;
     int first = 0;
     int second = 0;
 
+    // double every other number starting with second to last
     while (num1 != 0)
     {
 
-        int digit = 2*(num1 - num1/10*10);
+        // double digit
+        int digit = 2 * (num1 - num1 / 10 * 10);
 
+        // if the doubled digit is more than 10 add up the digits
         if (digit >= 10 && digit < 20)
         {
             int digitdigit = 0;
 
+            // add up the digits of the double digit
             while (digit != 0)
             {
-                digitdigit += (digit - digit/10*10);
+                digitdigit += (digit - digit / 10 * 10);
                 digit /= 10;
             }
 
+            // adding that to the first part of the validating sum
             first += digitdigit;
-        } else if (digit > 20)
+        }
+        else if (digit > 20)
         {
+            // if doubling the digit ends up being more then 20 something is wrong.
             printf("Something went wrong, please try again.\n");
-        } else
+            return 0;
+        }
+        else
         {
+            // adding that to the first part of the validating sum
             first += digit;
         }
 
+        // next digit
         num1 /= 100;
     }
 
+    // adding up the remainig digits
     while (num2 != 0)
     {
-        second += (num2 - num2/10*10);
+        // adding them up
+        second += (num2 - num2 / 10 * 10);
 
+        // next digit
         num2 /= 100;
     }
 
+    // if validating sum is multiple of 10, valid, if not, invalid
     if ((first + second) % 10 == 0)
     {
         return 1;
-    } else
+    }
+    else
     {
         return 0;
     }
@@ -117,7 +159,7 @@ long get_number_long(char str[128])
                 if (input[i] == numbers[j])
                 {
                     // not forgetting to use the correct powers of 10
-                    output += j*power(10, power_10);
+                    output += j * power(10, power_10);
                     power_10++;
                     found++;
                     break;
@@ -128,7 +170,8 @@ long get_number_long(char str[128])
             if (input[i] == 0)
             {
                 continue;
-            } else if (found == 0)
+            }
+            else if (found == 0)
             {
                 break;
             }
@@ -155,10 +198,12 @@ long long power(int x, int y)
     if (y == 0)
     {
         result = 1;
-    } else if (y == 1)
+    }
+    else if (y == 1)
     {
         return result;
-    } else
+    }
+    else
     {
         // times x till y is gone
         while (y > 1)
