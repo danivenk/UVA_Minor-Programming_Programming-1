@@ -2,8 +2,9 @@
 //  an American Express, a MasterCard or a VISA credit card
 // Dani van Enk, 11823526
 
-//including standard I/O header
+//including standard I/O and standard library headers
 #include <stdio.h>
+#include <stdlib.h>
 
 // predefining the used funcitons
 int valid(long num);
@@ -121,7 +122,7 @@ int valid(long num)
 // get_number_long prompts user with userdefined string (maxlen is 128)
 // it only accepts integer values and converts them to a usable int variable
 // dependencies: power() see below
-// change get_number_long to get_number_int or get_number_longlong by changing
+// change get_number_int to get_number_long or get_number_longlong by changing
 //  datatype of output and of the function
 long get_number_long(char str[128])
 {
@@ -132,10 +133,11 @@ long get_number_long(char str[128])
     while (1)
     {
         // predefine input, numbers and intialize powers
-        char input[128];
-        char numbers[10] = "0123456789";
         int power_10 = 0;
         int found = 0;
+        int size = 128;
+        char input[size];
+        char numbers[10] = "0123456789";
 
         // create a clean 0 filled input array
         for (int k = 0; k < 128; k++)
@@ -148,10 +150,10 @@ long get_number_long(char str[128])
 
         // promt user for input
         printf("%s", str);
-        scanf("%s", &input[0]);
+        fgets(input, size, stdin);
 
         // loop for each position
-        for (int i = 127; i >= 0; i--)
+        for (int i = size - 1; i >= 0; i--)
         {
             // convert the string to numbers
             for (int j = 0; j < 10; j++)
@@ -164,10 +166,14 @@ long get_number_long(char str[128])
                     found++;
                     break;
                 }
+                else
+                {
+                    found = 0;
+                }
             }
 
             // ignoring zeros in the input and retry if non numerical
-            if (input[i] == 0)
+            if (input[i] == 0 || input[i] == '\n')
             {
                 continue;
             }
