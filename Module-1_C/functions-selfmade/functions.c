@@ -1,4 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+int get_number_int(char str[128]);
+long long power(int x, int y);
+
+int main(void)
+{
+    int SIZE = 128;
+    char number[128];
+
+    int num = get_number_int("HI: ");
+
+    printf("%d\n", num);
+    return 0;
+}
 
 // get_number_int prompts user with userdefined string (maxlen is 128)
 // it only accepts integer values and converts them to a usable int variable
@@ -14,10 +29,11 @@ int get_number_int(char str[128])
     while (1)
     {
         // predefine input, numbers and intialize powers
-        char input[128];
-        char numbers[10] = "0123456789";
         int power_10 = 0;
         int found = 0;
+        int size = 128;
+        char input[size];
+        char numbers[10] = "0123456789";
 
         // create a clean 0 filled input array
         for (int k = 0; k < 128; k++)
@@ -30,10 +46,10 @@ int get_number_int(char str[128])
 
         // promt user for input
         printf("%s", str);
-        scanf("%s", &input[0]);
+        fgets(input, size, stdin);
 
         // loop for each position
-        for (int i = 127; i >= 0; i--)
+        for (int i = size - 1; i >= 0; i--)
         {
             // convert the string to numbers
             for (int j = 0; j < 10; j++)
@@ -46,10 +62,14 @@ int get_number_int(char str[128])
                     found++;
                     break;
                 }
+                else
+                {
+                    found = 0;
+                }
             }
 
             // ignoring zeros in the input and retry if non numerical
-            if (input[i] == 0)
+            if (input[i] == 0 || input[i] == '\n')
             {
                 continue;
             }
