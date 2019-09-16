@@ -1,45 +1,53 @@
+// crack.c guesses the password (max 5 characters) when given a hash
 // Dani van Enk, 11823526
 
-// including the standard I/O, standard library and ctype library
+// including the used libraries
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #define _XOPEN_SOURCE
 #include <unistd.h>
 #include <crypt.h>
+#include <string.h>
 
+// predefining the used functions
 char next_letter(char current_letter);
 int no_of_z(char string[], int length);
 
+// main loop with the accepted parameters
 int main(int argc, char *argv[])
 {
+    // only accepting 1 parameter when executing the code
     if (argc == 2)
     {
-        // defining SIZE and predefining the user_input
+        // defining size, position of least significant digit
+        //  length, userdefined has, password, last password and salt.
         int size = 6;
         int least_bit_pos = 0;
         int length = 1;
-        int roll_over = 0;
-        int next_digit = 0;
         char *hash = argv[1];
         char password[size];
         char lastpass[size];
         char salt[3] = {hash[0], hash[1]};
-        char input = 0;
 
+        // filling password and lastpass with zeros
         for (int i = 0; i < size; i++)
         {
             password[i] = '\0';
             lastpass[i] = '\0';
         }
 
+        // looping for each try
         while (1)
         {
+            // copy password onto lastpass
             for (int i = 0; i < size; i++)
             {
                 lastpass[i] = password[i];
             }
 
+            // if z is reached and the number of z is equal to length
+            //  add a new character
             if (lastpass[0] == 'z' && lastpass[least_bit_pos + 1] == '\0' &&
                 no_of_z(lastpass, length) == length)
             {
@@ -50,45 +58,42 @@ int main(int argc, char *argv[])
                     password[i] = next_letter(lastpass[i]);
                 }
             }
-            password[least_bit_pos] = next_letter(lastpass[least_bit_pos]);
 
-            // printf("Try: %s, Length: %d\n", password, length);
-
-            for (int i = 1; i <= length; i++)
+            // if z is reached and no new character is needed (no_of_z < length)
+            //  set next letter for the more significant letter
+            if (lastpass[least_bit_pos] == 'z')
             {
-                if (lastpass[i] == 'z' && (lastpass[i + 1] == 'z' || lastpass[i + 1] == '\0'))
+                for (int i = length - 1; i >= 0; i--)
                 {
-                    password[i - 1] = next_letter(lastpass[i - 1]);
-                    if (length > 3 && no_of_z(lastpass, size) >= 2)
+                    // for the next letter to be set, the less significant
+                    // letters must all be z, else break
+                    if (lastpass[i] == 'z')
                     {
-                        fgets(&input, size, stdin);
-                        printf("Try: %s\n", password);
+                        password[i - 1] = next_letter(lastpass[i - 1]);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
 
-            // printf("Try: %s, Length: %d\n", password, length);
+            // next letter, least significant letter is on the right
+            password[least_bit_pos] = next_letter(lastpass[least_bit_pos]);
 
-
-            // printf("Try: %s\n", password);
-
-
-            // if (password[0] == 'z' && password[1] == 'z')
-            // {
-            //     fgets(&input, size, stdin);
-            // }
-            if (hash == crypt(password, salt))
+            // if the hash gotten from the guessed password is equal to
+            //  the userdefined hash, correct password has been found
+            if (strcmp(hash, crypt(password, salt)) == 0)
             {
                 printf("Found: %s\n", password);
                 return 0;
             }
+            // exit for an password larger than 5 characters
             else if (length > 5)
             {
                 printf("Not Found 404\n");
                 return 1;
             }
-
-            //fgets(&input, size, stdin);
         }
     }
     // error message for not enough parameters
@@ -102,35 +107,48 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+// next_letter() returns the next leter to the given letter
 char next_letter(char current_letter)
 {
+    // define current letter
     int i = (int) current_letter;
+
+    // if Z is reached set letter to a
     if (i == 90)
     {
         i += 7;
     }
+    // if z is reached set letter to A
     else if (i == 122 || i == 0)
     {
         i = 65;
     }
+    // else just set to next letter
     else
     {
         i++;
     }
 
+    // return character
     return (char) i;
 }
 
+// no_of_z() returns the number of z in a string when given a string and length
 int no_of_z(char string[], int length)
 {
+    // begin with 0 z
     int no_z = 0;
+
+    // loop over the characters of the string
     for (int i = 0; i < length; i++)
     {
+        // if z is found increase no_z
         if (string[i] == 'z')
         {
             no_z++;
         }
     }
 
+    // return the number of z
     return no_z;
 }

@@ -6,8 +6,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+// main loop with the accepted parameters
 int main(int argc, char *argv[])
 {
+    // only accepting 1 parameter when executing the code
     if (argc == 2)
     {
         // defining SIZE and predefining the user_input
