@@ -1,5 +1,6 @@
-// crack.c guesses the password (max 5 characters) when given a hash
-// Dani van Enk, 11823526
+/* crack.c guesses the password (max 5 characters) when given a hash
+** Dani van Enk, 11823526
+*/
 
 // including the used libraries
 #include <stdio.h>

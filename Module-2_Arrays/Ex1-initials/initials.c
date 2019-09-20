@@ -1,5 +1,6 @@
-// initials.c give the initials of any name the user prompts
-// Dani van Enk, 11823526
+/* initials.c give the initials of any name the user prompts
+** Dani van Enk, 11823526
+*/
 
 // including the standard I/O, standard library and ctype library
 #include <stdio.h>

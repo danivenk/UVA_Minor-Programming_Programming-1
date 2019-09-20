@@ -1,5 +1,6 @@
-// caesar.c encodes a user text using the Caesar Cipher, with a userdefined key
-// Dani van Enk, 11823526
+/* caesar.c encodes a user text using the Caesar Cipher, with a userdefined key
+** Dani van Enk, 11823526
+*/
 
 // including the standard I/O, standard library and ctype library
 #include <stdio.h>
