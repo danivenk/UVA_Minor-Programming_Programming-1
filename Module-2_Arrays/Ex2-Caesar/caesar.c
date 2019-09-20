@@ -1,4 +1,5 @@
-/* caesar.c encodes a user text using the Caesar Cipher, with a userdefined key
+/*
+** caesar.c encodes a user text using the Caesar Cipher, with a userdefined key
 ** Dani van Enk, 11823526
 */
 
@@ -7,7 +8,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-// main loop with the accepted parameters
+/*
+** main loop with the possibility of parameters
+*/
 int main(int argc, char *argv[])
 {
     // only accepting 1 parameter when executing the code
@@ -32,7 +35,7 @@ int main(int argc, char *argv[])
         // begin printing the output
         printf("ciphertext: ");
 
-        // encoding the input message
+        // encoding the input message, where i is the ith character
         for (int i = 0; i < size; i++)
         {
             // changing the capital letters

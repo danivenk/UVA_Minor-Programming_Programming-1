@@ -1,4 +1,5 @@
-/* crack.c guesses the password (max 5 characters) when given a hash
+/*
+** crack.c guesses the password (max 5 characters) when given a hash
 ** Dani van Enk, 11823526
 */
 
@@ -15,14 +16,18 @@
 char next_letter(char current_letter);
 int no_of_z(char string[], int length);
 
-// main loop with the accepted parameters
+/*
+** main loop with the possibility of parameters
+*/
 int main(int argc, char *argv[])
 {
     // only accepting 1 parameter when executing the code
     if (argc == 2)
     {
-        // defining size, position of least significant digit
-        //  length, userdefined has, password, last password and salt.
+        /*
+        ** defining size, position of least significant digit
+        **  length, userdefined has, password, last password and salt.
+        */
         int size = 6;
         int least_bit_pos = 0;
         int length = 1;
@@ -42,35 +47,41 @@ int main(int argc, char *argv[])
         while (1)
         {
             // copy password onto lastpass
-            for (int i = 0; i < size; i++)
+            for (int char1 = 0; char1 < size; char1++)
             {
-                lastpass[i] = password[i];
+                lastpass[char1] = password[char1];
             }
 
-            // if z is reached and the number of z is equal to length
-            //  add a new character
+            /*
+            ** if z is reached and the number of z is equal to length
+            **  add a new character
+            */
             if (lastpass[0] == 'z' && lastpass[least_bit_pos + 1] == '\0' &&
                 no_of_z(lastpass, length) == length)
             {
                 least_bit_pos++;
                 length++;
-                for (int i = least_bit_pos - 1; i >= 0; i--)
+                for (int char2 = least_bit_pos - 1; char2 >= 0; char2--)
                 {
-                    password[i] = next_letter(lastpass[i]);
+                    password[char2] = next_letter(lastpass[char2]);
                 }
             }
 
-            // if z is reached and no new character is needed (no_of_z < length)
-            //  set next letter for the more significant letter
+            /*
+            ** if z is reached and no new character is needed (no_of_z < length)
+            **  set next letter for the more significant letter
+            */
             if (lastpass[least_bit_pos] == 'z')
             {
-                for (int i = length - 1; i >= 0; i--)
+                for (int char3 = length - 1; char3 >= 0; char3--)
                 {
-                    // for the next letter to be set, the less significant
-                    // letters must all be z, else break
-                    if (lastpass[i] == 'z')
+                    /*
+                    ** for the next letter to be set, the less significant
+                    **  letters must all be z, else break
+                    */
+                    if (lastpass[char3] == 'z')
                     {
-                        password[i - 1] = next_letter(lastpass[i - 1]);
+                        password[char3 - 1] = next_letter(lastpass[char3 - 1]);
                     }
                     else
                     {
@@ -82,8 +93,10 @@ int main(int argc, char *argv[])
             // next letter, least significant letter is on the right
             password[least_bit_pos] = next_letter(lastpass[least_bit_pos]);
 
-            // if the hash gotten from the guessed password is equal to
-            //  the userdefined hash, correct password has been found
+            /*
+            ** if the hash gotten from the guessed password is equal to
+            **  the userdefined hash, correct password has been found
+            */
             if (strcmp(hash, crypt(password, salt)) == 0)
             {
                 printf("Found: %s\n", password);
@@ -108,7 +121,9 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-// next_letter() returns the next leter to the given letter
+/*
+** next_letter() returns the next leter to the given letter
+*/
 char next_letter(char current_letter)
 {
     // define current letter
@@ -134,7 +149,9 @@ char next_letter(char current_letter)
     return (char) i;
 }
 
-// no_of_z() returns the number of z in a string when given a string and length
+/*
+** no_of_z() returns the number of z in a string when given a string and length
+*/
 int no_of_z(char string[], int length)
 {
     // begin with 0 z

@@ -1,4 +1,5 @@
-/* initials.c give the initials of any name the user prompts
+/*
+** initials.c give the initials of any name the user prompts
 ** Dani van Enk, 11823526
 */
 
@@ -7,7 +8,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-// main loop
+/*
+** main loop of the code
+*/
 int main(void)
 {
     // defining SIZE and predefining the user_input
@@ -18,7 +21,7 @@ int main(void)
     printf("Please put your name: ");
     fgets(input, size, stdin);
 
-    // loop for the initials
+    // loop for the initials where i is the ith character
     for (int i = 0; i < size; i++)
     {
         // print the character after an space character
