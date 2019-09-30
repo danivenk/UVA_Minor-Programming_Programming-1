@@ -1,0 +1,7 @@
+0. The framework allows games of dimensions between 3x3 and 9x9
+1. The board represents a 2D array or matrix
+2. The greet function is called, this clears the screen and prints
+    a welcome message and waits 2 seconds
+3. The to be implemented functions are an initialize function to
+    initialize the board, a move function to move pieces &
+    a finish function to end the game when it is over.
