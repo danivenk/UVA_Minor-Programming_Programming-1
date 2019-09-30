@@ -81,18 +81,10 @@ void sort(int values[], int n)
         value_counter[i] = 0;
     }
 
-    // loop over the possible integer values
-    for (int valcount = 0; valcount < max_value; valcount++)
+    // loop over the possible integer values and count them in the counting array
+    for (int valpos = 0; valpos < n; valpos++)
     {
-        // loop over the values array
-        for (int valpos = 0; valpos < n; valpos++)
-        {
-            // add count in counting array if number is in value array
-            if (valcount == values[valpos])
-            {
-                value_counter[valcount] += 1;
-            }
-        }
+        value_counter[values[valpos]] += 1;
     }
 
     // loop over the counting array
