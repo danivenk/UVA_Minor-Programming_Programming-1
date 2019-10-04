@@ -1,4 +1,4 @@
-// Copies a BMP file
+// Finds a clue in a red/white noise picture
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     // ensure proper usage
     if (argc != 3)
     {
-        fprintf(stderr, "Usage: copy infile outfile\n");
+        fprintf(stderr, "Usage: ./whodunit infile outfile\n");
         return 1;
     }
 
@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
+            // if a pixel is white or red make it black
             if (triple.rgbtRed == 0xFF && triple.rgbtGreen == 0xFF && triple.rgbtBlue == 0xFF)
             {
                 triple.rgbtRed = 0x00;
