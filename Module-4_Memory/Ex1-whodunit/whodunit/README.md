@@ -39,16 +39,19 @@ The color depth is specified at adress `0x1C` which is field called `biBitCount`
 
 ## Why is the third argument to `fread` always `1` in our code?
 
-TODO
+`fread` has `1` because only one element of size `sizeof()` is needed to be read.
 
 ## What value does line 63 of `copy.c` assign to `padding` if `bi.biWidth` is `3`?
 
-TODO
+`sizeof(RGBTRIPLE)` = 3 bytes ->
+    (4 - (3 * 3) % 4) % 4 ->
+        (4 - (9) % 4) % 4 ->
+            (4 - 1) % 4 -> 3 % 4 -> `padding` = 3
 
 ## What does `fseek` do?
 
-TODO
+`fseek` changes cursor position in stream (file) from `whence` to `whence` + `offset`.
 
 ## What is `SEEK_CUR`?
 
-TODO
+`SEEK_CUR` is the current position in the stream (file).

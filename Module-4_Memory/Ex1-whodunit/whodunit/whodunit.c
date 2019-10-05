@@ -1,9 +1,15 @@
-// Finds a clue in a red/white noise picture
+/*
+** Finds a clue in a red/white noise picture
+** Dani van Enk, 11823526
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "bmp.h"
+
+// predefining the used functions
+void decoding(RGBTRIPLE *RGB);
 
 int main(int argc, char *argv[])
 {
@@ -74,17 +80,8 @@ int main(int argc, char *argv[])
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
 
-            // if a pixel is white or red make it black
-            if (triple.rgbtRed == 0xFF && triple.rgbtGreen == 0xFF && triple.rgbtBlue == 0xFF)
-            {
-                triple.rgbtRed = 0x00;
-                triple.rgbtBlue = 0x00;
-                triple.rgbtGreen = 0x00;
-            }
-            else if (triple.rgbtRed == 0xFF && triple.rgbtGreen == 0x00 && triple.rgbtBlue == 0x00)
-            {
-                triple.rgbtRed = 0x00;
-            }
+            // find the verdict
+            decoding(&triple);
 
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
@@ -108,4 +105,24 @@ int main(int argc, char *argv[])
 
     // success
     return 0;
+}
+
+/*
+** decoding changes the red-white noise pixels to black
+*/
+void decoding(RGBTRIPLE *RGB)
+{
+    // if a pixel is white or red make it black
+            if (RGB->rgbtRed == 0xFF && RGB->rgbtGreen == 0xFF && RGB->rgbtBlue == 0xFF)
+            {
+                RGB->rgbtRed = 0x00;
+                RGB->rgbtBlue = 0x00;
+                RGB->rgbtGreen = 0x00;
+            }
+            else if (RGB->rgbtRed == 0xFF && RGB->rgbtGreen == 0x00 && RGB->rgbtBlue == 0x00)
+            {
+                RGB->rgbtRed = 0x00;
+            }
+
+    return;
 }
