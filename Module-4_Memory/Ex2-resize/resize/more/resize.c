@@ -17,6 +17,24 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // create pointer for factor
+    double *f = (double *) malloc(sizeof(double));
+
+    // set pointer value to the userdefined factor
+    *f = atof(argv[1]);
+    if (!f)
+    {
+        fprintf(stderr, "Could not allocate memory.\n");
+        return 2;
+    }
+
+    if (*f < 0 || *f >= 100)
+    {
+        fprintf(stderr, "Could not use this factor, " \
+            "please choose an f in the interval (0,100]\n");
+        return 3;
+    }
+
     // remember filenames
     char *infile = argv[2];
     char *outfile = argv[3];
@@ -26,7 +44,7 @@ int main(int argc, char *argv[])
     if (!inptr)
     {
         fprintf(stderr, "Could not open %s.\n", infile);
-        return 2;
+        return 4;
     }
 
     // open output file
@@ -35,18 +53,7 @@ int main(int argc, char *argv[])
     {
         fclose(inptr);
         fprintf(stderr, "Could not create %s.\n", outfile);
-        return 3;
-    }
-
-    // create pointer for factor
-    double *f = (double *) malloc(sizeof(double));
-
-    // set pointer value to the userdefined factor
-    *f = atof(argv[1]);
-    if (!f)
-    {
-        fprintf(stderr, "Could not allocate memory or f is out of bounds.\n");
-        return 1;
+        return 5;
     }
 
     // read infile's BITMAPFILEHEADER
@@ -67,17 +74,10 @@ int main(int argc, char *argv[])
         return 4;
     }
 
-    fprintf(stdout, "Width %d\n", bi.biWidth);
-    fprintf(stdout, "Height %d\n", bi.biHeight);
-    fprintf(stdout, "SizeImage %d\n", bi.biSizeImage);
-    fprintf(stdout, "Size %d\n", bf.bfSize);
+    int width = bi.biWidth;
+    int height = abs(bi.biHeight);
 
     resize_header(&bf, &bi, *f);
-
-    fprintf(stdout, "Width %d\n", bi.biWidth);
-    fprintf(stdout, "Height %d\n", bi.biHeight);
-    fprintf(stdout, "SizeImage %d\n", bi.biSizeImage);
-    fprintf(stdout, "Size %d\n", bf.bfSize);
 
     // write outfile's BITMAPFILEHEADER
     fwrite(&bf, sizeof(BITMAPFILEHEADER), 1, outptr);
@@ -88,17 +88,36 @@ int main(int argc, char *argv[])
     // determine padding for scanlines
     int padding = (4 - (bi.biWidth * sizeof(RGBTRIPLE)) % 4) % 4;
 
+    RGBTRIPLE data_resize[abs(bi.biHeight)][bi.biWidth];
+    RGBTRIPLE data[height][width];
+
     // iterate over infile's scanlines
-    for (int i = 0, biHeight = abs(bi.biHeight); i < biHeight; i++)
+    for (int i = 0; i < height; i++)
     {
         // iterate over pixels in scanline
-        for (int j = 0; j < bi.biWidth; j++)
+        for (int j = 0; j < width; j++)
         {
             // temporary storage
             RGBTRIPLE triple;
 
             // read RGB triple from infile
             fread(&triple, sizeof(RGBTRIPLE), 1, inptr);
+
+            data[i][j] = triple;
+        }
+
+        // skip over padding, if any
+        fseek(inptr, padding, SEEK_CUR);
+    }
+
+    // iterate over infile's scanlines
+    for (int i = 0; i < abs(bi.biHeight); i++)
+    {
+        // iterate over pixels in scanline
+        for (int j = 0; j < bi.biWidth; j++)
+        {
+            // temporary storage
+            RGBTRIPLE triple = data[i][j];
 
             // write RGB triple to outfile
             fwrite(&triple, sizeof(RGBTRIPLE), 1, outptr);
@@ -133,7 +152,7 @@ void resize_header(BITMAPFILEHEADER *bf, BITMAPINFOHEADER *bi, double f)
 
     int resize_width = round(f * bi->biWidth);
     int resize_height = round(f * bi->biHeight);
-    int padding = 4 - resize_width % 4;
+    int padding = (4 - resize_width % 4) % 4;
 
     bi->biWidth = resize_width;
     bi->biHeight = resize_height;
