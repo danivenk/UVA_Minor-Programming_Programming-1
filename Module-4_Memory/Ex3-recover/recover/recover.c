@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
             file_found = true;
         }
         // if a zero block has found or found JPG while making file, close file
-        else if(JPG_check && file_found == true)
+        else if (JPG_check && file_found == true)
         {
             // close outfile, increase file count
             fclose(outptr);
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
             file_found = false;
         }
         // if a JPG has been found write all following non-zero blocks
-        else if(!JPG_check && file_found == true)
+        else if (!JPG_check && file_found == true)
         {
             append_block_to_file(current_block, outptr);
         }
