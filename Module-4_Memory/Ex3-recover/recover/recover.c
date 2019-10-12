@@ -25,7 +25,6 @@ typedef struct
 BLOCK;
 
 // predefining used functions
-bool is_zero(BLOCK *zero_block);
 void append_block_to_file(BLOCK *append_block, FILE *filepointer);
 
 /*
@@ -108,7 +107,7 @@ int main(int argc, char *argv[])
             file_found = true;
         }
         // if a zero block has found or found JPG while making file, close file
-        else if((JPG_check || is_zero(current_block)) && file_found == true)
+        else if(JPG_check && file_found == true)
         {
             // close outfile, increase file count
             fclose(outptr);
@@ -136,25 +135,6 @@ int main(int argc, char *argv[])
 
     // exit program
     return 0;
-}
-
-/*
-** when given a block is_zero() checks if the block only contains zeros
-*/
-bool is_zero(BLOCK *zero_block)
-{
-    // loop over every word in the block
-    for (int i = 0; i < BLOCK_SIZE; i++)
-    {
-        // if something else than 0 has been found return false
-        if (zero_block->words[i] != 0)
-        {
-            return false;
-        }
-    }
-
-    // if only contains zeros return true
-    return true;
 }
 
 /*
