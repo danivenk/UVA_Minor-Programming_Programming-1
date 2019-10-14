@@ -38,6 +38,10 @@ int main(int argc, char *argv[])
     if (!f)
     {
         fprintf(stderr, "Could not allocate memory.\n");
+
+        // free allocated memory
+        free(f);
+
         return 2;
     }
 
@@ -46,6 +50,7 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Could not use this factor, " \
             "please choose an f in the interval (0,100]\n");
+
         return 3;
     }
 
@@ -58,6 +63,10 @@ int main(int argc, char *argv[])
     if (!inptr)
     {
         fprintf(stderr, "Could not open %s.\n", infile);
+
+        // free allocated memory
+        free(f);
+
         return 4;
     }
 
@@ -65,8 +74,14 @@ int main(int argc, char *argv[])
     FILE *outptr = fopen(outfile, "w");
     if (!outptr)
     {
-        fclose(inptr);
         fprintf(stderr, "Could not create %s.\n", outfile);
+
+        // free allocated memory
+        free(f);
+
+        // close files
+        fclose(inptr);
+
         return 5;
     }
 
@@ -82,9 +97,15 @@ int main(int argc, char *argv[])
     if (bf.bfType != 0x4d42 || bf.bfOffBits != 54 || bi.biSize != 40 ||
         bi.biBitCount != 24 || bi.biCompression != 0)
     {
-        fclose(outptr);
-        fclose(inptr);
         fprintf(stderr, "Unsupported file format.\n");
+
+        // free allocated memory
+        free(f);
+
+        // close files
+        fclose(inptr);
+        fclose(outptr);
+
         return 4;
     }
 
@@ -116,6 +137,14 @@ int main(int argc, char *argv[])
     if (!data || !data_resize)
     {
         fprintf(stderr, "Could not allocate memory.\n");
+
+        // free allocated memory
+        free(f);
+
+        // close files
+        fclose(inptr);
+        fclose(outptr);
+
         return 5;
     }
 

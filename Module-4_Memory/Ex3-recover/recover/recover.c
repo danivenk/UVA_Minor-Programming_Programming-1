@@ -48,6 +48,9 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Could not open %s.\n", infile);
         return 2;
+
+        // close infile
+        fclose(inptr);
     }
 
     // get file_size
@@ -65,6 +68,14 @@ int main(int argc, char *argv[])
     if (!file_name)
     {
         fprintf(stderr, "Could not allocate memory.\n");
+
+
+        // free allocated memory
+        free(file_name);
+
+        // close infile
+        fclose(inptr);
+
         return 3;
     }
 
@@ -76,6 +87,14 @@ int main(int argc, char *argv[])
         if (!current_block)
         {
             fprintf(stderr, "Could not allocate memory.\n");
+
+            // free allocated memory
+            free(current_block);
+            free(file_name);
+
+            // close infile
+            fclose(inptr);
+
             return 4;
         }
 
@@ -127,8 +146,9 @@ int main(int argc, char *argv[])
         free(current_block);
     }
 
-    // close infile
+    // close files
     fclose(inptr);
+    fclose(outptr);
 
     // free allocated memory for the filename
     free(file_name);
