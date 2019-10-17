@@ -3,32 +3,48 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <ctype.h>
 
 #include "dictionary.h"
 
-#define LF 0x0A
-#define ALPHA 26
-
-typedef struct node_array
-{
-    char letter[ALPHA];
-    struct node *next[ALPHA];
-}
-node_array;
-
-typedef struct node
-{
-    char letter;
-    struct node *next;
-}
-node;
+struct node_array *first_node;
 
 // Returns true if word is in dictionary else false
 bool check(const char *word)
 {
-    printf("%s\n", word);
-    return false;
+    node_array *ptr = malloc(sizeof(node_array));
+    if (!ptr)
+    {
+        fprintf(stderr, "Could not allocate memory.");
+        return false;
+    }
+
+    *ptr = *first_node;
+
+    for (int i = 0; word[i]; i++)
+    {
+        int pos = get_pos(word[i]);
+
+        if (pos == 100)
+        {
+            fprintf(stderr, "Incorrect charcter found.");
+            return false;
+        }
+
+        if(ptr->letter[pos] != 0)
+        {
+            ptr = ptr->next[pos];
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    delNode(ptr);
+
+    return true;
 }
 
 // Loads dictionary into memory, returning true if successful else false
@@ -38,51 +54,226 @@ bool load(const char *dictionary)
     if (!inptr)
     {
         fprintf(stderr, "Could not open %s.\n", dictionary);
-        return false;
 
+        // close infile
+        fclose(inptr);
+
+        return false;
     }
 
     // get file_size
     fseek(inptr, 0L, SEEK_END);
-    int file_size = 10 * sizeof(char);//ftell(inptr);
+    int file_size = ftell(inptr);
     fseek(inptr, 0L, SEEK_SET);
 
-    // node (*pos_node)[LENGTH] = malloc(LENGTH * sizeof(node));
+    first_node = realloc(first_node, sizeof(node_array));
+    node_array *current_node = malloc(sizeof(node_array));
+    if (!first_node || !current_node)
+    {
+        fprintf(stderr, "Could not allocate memory.");
+
+        free(first_node);
+        free(current_node);
+
+        // close infile
+        fclose(inptr);
+
+        return false;
+    }
+
+    init_node(first_node);
+
     while(file_size > ftell(inptr))
     {
-        int word_size = 0;
+        int character_count = 0;
+        current_node = first_node;
 
         char *letter = malloc(sizeof(char));
+        if (!letter)
+        {
+            fprintf(stderr, "Could not allocate memory.");
+
+            free(first_node);
+            free(current_node);
+
+            free(letter);
+
+            // close infile
+            fclose(inptr);
+
+            return false;
+        }
+
+        fread(letter, sizeof(char), 1, inptr);
+        character_count++;
 
         while (*letter != LF)
         {
+            character_count++;
             fread(letter, sizeof(char), 1, inptr);
-            word_size++;
         }
 
-        fseek(inptr, -word_size * sizeof(char), SEEK_CUR);
+        free(letter);
+
+        fseek(inptr, -character_count * sizeof(char), SEEK_CUR);
+
+        int word_size = character_count - 1;
 
         char *current_word = malloc(word_size * sizeof(char));
+        if (!current_word)
+        {
+            fprintf(stderr, "Could not allocate memory.");
+
+            free(first_node);
+            free(current_node);
+
+            free(letter);
+            free(current_word);
+
+            // close infile
+            fclose(inptr);
+
+            return false;
+        }
 
         fread(current_word, word_size * sizeof(char), 1, inptr);
+
+        // skip over the enter characters
+        fseek(inptr, sizeof(char), SEEK_CUR);
+
+        for (int i = 0; i < word_size; i++)
+        {
+            int pos = get_pos(current_word[i]);
+
+            if (pos == 100)
+            {
+                fprintf(stderr, "Incorrect charcter found.");
+                return false;
+            }
+
+            current_node->letter[pos] += 1;
+
+            if (current_node->next[pos] == NULL)
+            {
+                node_array (*next_node) = malloc(sizeof(node_array));
+                if (!next_node)
+                {
+                    fprintf(stderr, "Could not allocate memory.");
+
+
+                    free(first_node);
+                    free(current_node);
+
+                    free(letter);
+                    free(current_word);
+
+                    free(next_node);
+
+                    // close infile
+                    fclose(inptr);
+
+                    return false;
+                }
+
+                init_node(next_node);
+
+                current_node->next[pos] = next_node;
+
+                next_node = NULL;
+
+                free(next_node);
+            }
+
+            current_node = current_node->next[pos];
+        }
+
+        free(current_word);
+
+
+        current_node = NULL;
+
+        free(current_node);
+
     }
 
     // close infile
     fclose(inptr);
 
-    return false;
+    return true;
 }
 
 // Returns number of words in dictionary if loaded else 0 if not yet loaded
 unsigned int size(void)
 {
-    // TODO
-    return 0;
+    int words = 0;
+    for (int i = 0; i < ALPHA; i++)
+    {
+        words += first_node->letter[i];
+    }
+
+    return words;
 }
 
 // Unloads dictionary from memory, returning true if successful else false
 bool unload(void)
 {
-    // TODO
-    return false;
+    delNode(first_node);
+
+    free(first_node);
+
+    return true;
+}
+
+void init_node(node_array *node)
+{
+    for (int i = 0; i < ALPHA; i++)
+    {
+        node->letter[i] = 0;
+        node->next[i] = NULL;
+    }
+}
+
+int get_pos(char character)
+{
+    int pos;
+
+    if (isalpha(character))
+    {
+        pos = tolower(character) - 'a';
+    }
+    else if (character == QUOTE)
+    {
+        pos = ALPHA - 1;
+    }
+    else
+    {
+        pos = 100;
+    }
+
+    return pos;
+}
+
+void delNode(node_array *node)
+{
+    for (int i = 0; i < ALPHA; i++)
+    {
+        node_array *node_next = node->next[i];
+
+        if (node_next != NULL)
+        {
+            for (int j = 0; j < ALPHA; j++)
+            {
+                if (node_next->next[i] != NULL)
+                {
+                    delNode(node_next);
+
+                    node_next->next[i] = NULL;
+                }
+            }
+        }
+
+        free(node_next);
+    }
+
+    return;
 }
