@@ -3,6 +3,7 @@
 ** Dani van Enk, 11823526
 */
 
+// used libraries
 #include <stdio.h>
 #include <stdlib.h>
 
