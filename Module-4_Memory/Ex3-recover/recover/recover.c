@@ -47,10 +47,8 @@ int main(int argc, char *argv[])
     if (!inptr)
     {
         fprintf(stderr, "Could not open %s.\n", infile);
-        return 2;
 
-        // close infile
-        fclose(inptr);
+        return 2;
     }
 
     // get file_size
@@ -69,10 +67,6 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Could not allocate memory.\n");
 
-
-        // free allocated memory
-        free(file_name);
-
         // close infile
         fclose(inptr);
 
@@ -89,7 +83,6 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Could not allocate memory.\n");
 
             // free allocated memory
-            free(current_block);
             free(file_name);
 
             // close infile
@@ -136,7 +129,7 @@ int main(int argc, char *argv[])
             fseek(inptr, -sizeof(BLOCK), SEEK_CUR);
             file_found = false;
         }
-        // if a JPG has been found write all following non-zero blocks
+        // if a JPG has been found write all following blocks
         else if (!JPG_check && file_found == true)
         {
             append_block_to_file(current_block, outptr);
