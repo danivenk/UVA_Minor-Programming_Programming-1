@@ -16,13 +16,16 @@
 // number of possible characters
 #define ALPHA 27
 
+// definition of a node in a TRIE datastructure
 typedef struct node_array
 {
     int letter[ALPHA];
     struct node_array *next[ALPHA];
+    bool c_word_end;
 }
 node_array;
 
+// declare global first_node
 extern struct node_array *first_node;
 
 // Prototypes
