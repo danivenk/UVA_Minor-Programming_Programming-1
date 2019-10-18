@@ -3,6 +3,7 @@
 ** Dani van Enk, 11823526
 */
 
+// used libraries
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -39,9 +40,6 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Could not allocate memory.\n");
 
-        // free allocated memory
-        free(f);
-
         return 2;
     }
 
@@ -50,6 +48,9 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Could not use this factor, " \
             "please choose an f in the interval (0,100]\n");
+
+        // free allocated memory
+        free(f);
 
         return 3;
     }
