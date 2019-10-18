@@ -7,7 +7,7 @@ Where the width of an integer is the number of bit used in a pure binary system 
 
 ## What's the point of using `uint8_t`, `uint32_t`, `int32_t`, and `uint16_t` in a program?
 
-You can use these to define integers with a width of at least 8, 16 or 32 bits.
+You can use these to define integers with a width of at exact;y 8, 16 or 32 bits.
 If you use `uin8_t`, `uint16_t` or `uint32_t` you're able to use positive numbers with a width of exactly 8, 16 or 32 bits.
 If you use `int32_t` you're able to use both positive and negative numbers but the number can only have a width of 31 bits,
         the leftmost bit is used for positive or negative.

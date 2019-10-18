@@ -36,8 +36,10 @@ int main(int argc, char *argv[])
     FILE *outptr = fopen(outfile, "w");
     if (outptr == NULL)
     {
-        fclose(inptr);
         fprintf(stderr, "Could not create %s.\n", outfile);
+
+        // close infile
+        fclose(inptr);
         return 3;
     }
 
