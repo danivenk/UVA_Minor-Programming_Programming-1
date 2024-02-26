@@ -25,3 +25,5 @@ Ex3 - recover   recovers jpg files from a raw file
 
 Module 5 - Misspelling
 Ex1 - speller   checks a text for misspellings
+
+It also included a mini library for some functions that were self-made instead of just using the CS50x library that was provided.
